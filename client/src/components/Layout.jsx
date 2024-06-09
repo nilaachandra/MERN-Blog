@@ -8,7 +8,7 @@ const Layout = () => {
   const { light, toggleTheme } = useGlobalContext();
   return (
     <div
-      className={`w-full py-4 lg:px-32 md:px-32 px-4 transition-all duration-200 ${
+      className={`w-full body-font py-4 lg:px-32 md:px-32 px-4 transition-all duration-200 ${
         light ? "bg-light-bg text-light-text" : "bg-dark-bg text-dark-text"
       }`}
     >

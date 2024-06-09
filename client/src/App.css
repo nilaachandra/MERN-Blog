@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Heading';
+    src: url(./fonts/headerfont.ttf);
+}
+@font-face {
+    font-family: 'Body';
+    src: url(./fonts/bodyfont.ttf);
+}
+@font-face {
+    font-family: 'BodyBold';
+    src: url(./fonts/bodybold.ttf);
+}
+.heading {
+    font-family: 'Heading';
+}
+.body-font {
+    font-family: 'Body';
+}
+.body-bold {
+    font-family: 'BodyBold';
+}

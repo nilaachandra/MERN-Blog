@@ -14,7 +14,7 @@ const Footer = () => {
       <div className="w-full flex lg:flex-row flex-col justify-between">
         <div className="w-full items-center flex mb-4">
           <div
-            className={`flex gap-2  items-center pr-3 rounded-md ${
+            className={`flex gap-2 heading items-center pr-3 rounded-md ${
               light
                 ? "bg-dark-bg text-dark-text"
                 : "bg-light-bg text-light-text"
