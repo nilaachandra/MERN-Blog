@@ -22,7 +22,7 @@ const Footer = () => {
             }`}
           >
             <img src={logo} alt="" width={50} height={50} />
-            <h1 className="lg:text-xl text-sm font-bold">27Blogs</h1>
+            <h1 className="text-2xl font-bold">27Blogs</h1>
           </div>
         </div>
         <div className="usefull lg:w-1/2 w-full flex justify-between gap-20">

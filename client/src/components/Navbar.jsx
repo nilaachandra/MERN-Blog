@@ -40,7 +40,7 @@ const Navbar = () => {
         }`}
       >
         <img src={logo} alt="" width={50} height={50} />
-        <h1 className="lg:text-xl text-sm font-bold heading">
+        <h1 className="text-2xl font-bold heading">
           27Blogs
         </h1>
       </Link>
