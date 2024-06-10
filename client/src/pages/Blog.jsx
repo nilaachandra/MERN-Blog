@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { MdArrowBackIos } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { motion, useInView } from "framer-motion";
+import {  motion, useInView } from "framer-motion";
 import { PiPopcorn } from "react-icons/pi";
 import { IoEyeSharp } from "react-icons/io5";
 import BlogCard from "../components/BlogCard";
@@ -20,8 +20,11 @@ const Blog = ({
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: {
-        staggeredChildren: 0.3,
+      transition:  {
+        ease: "linear",
+        type: 'spring',
+        duration: 1,
+        staggeredChildren: 0.4,
       },
     },
   };
@@ -31,8 +34,11 @@ const Blog = ({
     show: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.4,
+      transition:  {
+        ease: "linear",
+        type: 'spring',
+        duration: 1,
+        staggeredChildren: 0.4,
       },
     },
   };
@@ -64,7 +70,7 @@ const Blog = ({
       </div>
       <motion.div className="body">
         <motion.h1
-          className="lg:text-5xl text-3xl font-bold heading"
+          className="lg:text-6xl text-3xl font-bold heading"
           variants={item}
           initial="hidden"
           animate="show"
@@ -78,14 +84,14 @@ const Blog = ({
           animate="show"
         >
           <div className="my-2">
-            <h1 className="text-lg">
+            <h1 className="lg:text-lg text-sm">
               By: <span>{author || "Nila Chandra Laishram"}</span>
             </h1>
-            <h1 className="text-lg">
-              Posted at: <span>{postedAt || "8th August 2023, 12:47 PM"}</span>
+            <h1 className="lg:text-lg text-sm">
+              Posted on: <span>{postedAt || "8th August 2023, 12:47 PM"}</span>
             </h1>
           </div>
-          <h1 className="text-lg my-2">{category || "General"}</h1>
+          <h1 className="lg:text-lg text-sm my-2">{category || "General"}</h1>
         </motion.div>
         <motion.img
           src={
@@ -100,7 +106,7 @@ const Blog = ({
         />
         <motion.div className="content" variants={container}>
           {content || (
-            <main className="container mt-4">
+            <main className="container mt-4 lg:text-xl text-base">
               <Section>
                 <p className="mb-4">
                   Football, known as soccer in some parts of the world, is the
@@ -326,7 +332,7 @@ const Blog = ({
           </div>
 
           <div className="related my-8">
-            <h1 className="lg:text-4xl text-base body-bold font-bold">
+            <h1 className="lg:text-4xl text-3xl body-bold font-bold">
               Related Blog
             </h1>
             <div

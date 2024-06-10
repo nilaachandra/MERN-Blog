@@ -34,7 +34,7 @@ const Featured = () => {
   
   return (
     <>
-      <h1 className="mt-3 lg:text-4xl text-base body-bold font-bold">Featured Blog</h1>
+      <h1 className="mt-3  lg:text-4xl text-3xl body-bold  font-bold">Featured Blog</h1>
       <motion.div
       ref={ref}
       initial="hidden"

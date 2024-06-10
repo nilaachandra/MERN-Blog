@@ -11,6 +11,7 @@ const Footer = () => {
   const { light } = useGlobalContext();
   return (
     <>
+    
       <div className="w-full flex lg:flex-row flex-col justify-between">
         <div className="w-full items-center flex mb-4">
           <div
