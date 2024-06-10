@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <div
       className={`w-full flex justify-between }`}
-      onClick={() => setOpenNav(!openNav)}
+      
       ref={menuRef}
     >
       <Link
@@ -41,7 +41,7 @@ const Navbar = () => {
       >
         <img src={logo} alt="" width={50} height={50} />
         <h1 className="lg:text-xl text-sm font-bold heading">
-          JustAnotherBlog
+          27Blogs
         </h1>
       </Link>
       <div className="flex relative gap-3 items-center cursor-pointer">
@@ -63,15 +63,15 @@ const Navbar = () => {
               light ? "border-black bg-white" : "border-white bg-black"
             }`}
           >
-            <Link to="/login" className="flex items-center justify-start cursor-pointer hover:underline gap-4">
+            <Link to="/login" onClick={() => setOpenNav(!openNav)}  className="flex items-center justify-start cursor-pointer hover:underline gap-4">
               <BiLogIn size={24} /><span className="text-lg font-bold">Login</span>
             </Link>
             
-            <Link to="/sign-up" className="flex items-center  justify-start cursor-pointer hover:underline gap-4">
+            <Link to="/sign-up" onClick={() => setOpenNav(!openNav)} className="flex items-center  justify-start cursor-pointer hover:underline gap-4">
               <HiOutlineUserAdd size={24} /><span className="text-lg font-bold">Sign Up</span>
             </Link>
 
-            <Link to="" className="flex items-center  justify-start cursor-pointer hover:underline gap-4">
+            <Link to="" onClick={() => setOpenNav(!openNav)} className="flex items-center  justify-start cursor-pointer hover:underline gap-4">
               <FaRegUser size={24} /><span className="text-lg font-bold">Profile</span>
             </Link>
           </motion.div>

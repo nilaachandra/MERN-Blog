@@ -22,7 +22,7 @@ const Footer = () => {
             }`}
           >
             <img src={logo} alt="" width={50} height={50} />
-            <h1 className="lg:text-xl text-sm font-bold">JustAnotherBlog</h1>
+            <h1 className="lg:text-xl text-sm font-bold">27Blogs</h1>
           </div>
         </div>
         <div className="usefull lg:w-1/2 w-full flex justify-between gap-20">
@@ -49,7 +49,7 @@ const Footer = () => {
       <div className="w-full lg:flex-row flex-col flex justify-between lg:items-center items-start gap-2">
         <h1 className="text-left lg:text-base text-xs">
           <span>©️2024</span>{" "}
-          <span className="">JustAnotherBlog. All Rights Reserved</span>{" "}
+          <span className="">27Blogs. All Rights Reserved</span>{" "}
         </h1>
         <div className="flex gap-2 items-center">
           <a href="https://twitter.com/nilaacodes" target="_blank">
