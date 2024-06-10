@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-
+import { useNavigate } from "react-router-dom";
+import { PiPopcorn } from "react-icons/pi";
+import { IoEyeSharp } from "react-icons/io5";
 const BlogCard = ({
   title,
   onClick,
@@ -11,6 +13,8 @@ const BlogCard = ({
   postedAt,
   author,
   category,
+  popcorn,
+  views,
   ...props
 }) => {
   const { light } = useGlobalContext();
@@ -19,7 +23,7 @@ const BlogCard = ({
     triggerOnce: true,  // Trigger the animation only once
     threshold: 0.15      // Trigger when 10% of the component is in view
   });
-
+const navigate = useNavigate()
   useEffect(() => {
     if (inView) {
       controls.start("visible");
@@ -34,16 +38,14 @@ const BlogCard = ({
   return (
     <motion.div
       ref={ref}
+      onClick={() => navigate('/blogs/:category/:id/:title')}
       initial="hidden"
       animate={controls}
       variants={variants}
       className={`border flex flex-col gap-3 w-full ${light ? "border-black" : "border-white"} mt-3 p-2 rounded-sm ${className}`}
       {...props}
     >
-      <h1 className="heading font-semibold lg:text-lg text-lg  leading-none ">
-        {title ||
-          "Mobile Legends is Unbanning in India, here are some tips to get started again"}
-      </h1>
+      
       <img
         src={
           image ||
@@ -52,6 +54,10 @@ const BlogCard = ({
         alt=""
         className="w-full object-cover h-[20vh] lg:h-[25vh]"
       />
+      <h1 className="heading font-semibold lg:text-lg text-lg  leading-none ">
+        {title ||
+          "Mobile Legends is Unbanning in India, here are some tips to get started again"}
+      </h1>
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-sm">
@@ -61,7 +67,14 @@ const BlogCard = ({
             Posted at: <span>{postedAt || "8th August 2023, 12:47 PM"}</span>
           </h1>
         </div>
+        <div className="views flex flex-col items-end">
+          <div className="flex items-center gap-2">
+            <span className="flex items-center"><PiPopcorn/>{popcorn || 27}</span>
+            <span className="flex items-center"><IoEyeSharp/>{views || 27}</span>
+          </div>
         <h1 className="text-sm">{category || 'General'}</h1>
+
+        </div>
       </div>
     </motion.div>
   );

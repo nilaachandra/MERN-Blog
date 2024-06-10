@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useNavigate } from "react-router-dom";
 
 const Featured = () => {
   const [isReadMore, setIsReadMore] = useState(false);
+  const navigate = useNavigate()
+
   const { light } = useGlobalContext();
   const controls = useAnimation();
   const { ref, inView } = useInView({
@@ -23,19 +26,22 @@ const Featured = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
   };
 
-  const toggleReadMore = () => {
-    setIsReadMore(!isReadMore);
-  };
+  // const toggleReadMore = () => {
+  //   setIsReadMore(!isReadMore);
+  // };
 
+
+  
   return (
     <>
       <h1 className="mt-3 lg:text-4xl text-base body-bold font-bold">Featured Blog</h1>
       <motion.div
       ref={ref}
       initial="hidden"
+      onClick={() => navigate('/blogs/:category/:id/:title')}
       animate={controls}
       variants={variants}
-      className={`w-full border ${light ? "border-black" : "border-white"} p-2 rounded-sm mt-3`}>
+      className={`w-full border cursor-pointer ${light ? "border-black" : "border-white"} p-2 rounded-sm mt-3`}>
       <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4">
         <div className="w-full lg:h-[44vh] h-[22vh]">
           <img

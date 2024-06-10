@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 import { GlobalProvider } from './contexts/GlobalContext'
 import Homepage from './pages/Homepage'
 import Login from './pages/Login'
+import Blog from './pages/Blog'
 
 function App() {
 const router = createBrowserRouter([
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         element: <Login/>
+      },
+      {
+        path : '/blogs/:category/:id/:title',
+        element: <Blog/>
       }
     ]
   }
