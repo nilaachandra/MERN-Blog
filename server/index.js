@@ -42,7 +42,7 @@ app.post("/sign-up", async (req, res) => {
     // Create new user
     const newUser = await user.create({
       username,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     // Respond with the created user (excluding password)
@@ -71,12 +71,10 @@ app.post("/login", async (req, res) => {
 
     // Send response indicating success
     res.json({ message: "Login successful" });
-
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 });
-
 
 // MongoDB connection
 mongoose
