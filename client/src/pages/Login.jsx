@@ -1,44 +1,27 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { motion } from "framer-motion";
+import { useAuth } from "../contexts/AuthContext";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState('');
   const { light } = useGlobalContext();
   const [revealPassword, setRevealPassword] = useState(false);
-
+  const {login, errorMessage} = useAuth()
+  
+  const navigate = useNavigate()
   //login
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/login",
-        {
-          username: username,
-          password: password,
-        },
-        { headers: { "Content-Type": "application/json" } }
-      );
-      console.log(response.data);
-      setErrorMessage(''); // Clear error message on success
-    } catch (error) {
-      if (error.response) {
-        // Server responded with a status other than 2xx
-        setErrorMessage(error.response.data.message);
-      } else if (error.request) {
-        // Request was made but no response was received
-        setErrorMessage('No response from server. Please try again later.');
-      } else {
-        // Something happened in setting up the request
-        setErrorMessage('An error occurred. Please try again.');
-      }
+    const result = await login(username, password);
+    if (result.success) {
+      navigate('/profile');
     }
-    console.log(username, password);
   };
+  
 
   return (
 <motion.div

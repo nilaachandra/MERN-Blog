@@ -71,7 +71,7 @@ const Navbar = () => {
               <HiOutlineUserAdd size={24} /><span className="text-lg font-bold">Sign Up</span>
             </Link>
 
-            <Link to="" onClick={() => setOpenNav(!openNav)} className="flex items-center  justify-start cursor-pointer hover:underline gap-4">
+            <Link to="/profile" onClick={() => setOpenNav(!openNav)} className="flex items-center  justify-start cursor-pointer hover:underline gap-4">
               <FaRegUser size={24} /><span className="text-lg font-bold">Profile</span>
             </Link>
           </motion.div>

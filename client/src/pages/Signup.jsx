@@ -1,50 +1,31 @@
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
+import { useAuth } from "../contexts/AuthContext";
+
+
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const { light } = useGlobalContext();
   const [revealPassword, setRevealPassword] = useState(false);
   const [revealConfirmPassword, setRevealConfirmPassword] = useState(false);
-
+  const { signUp, errorMessage } = useAuth();
+  const navigate = useNavigate()
   //signup
   const handleSignUp = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/sign-up",
-        {
-          username,
-          password,
-          confirmPassword,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      console.log(response.data);
-      setErrorMessage(""); // Clear error message on success
-    } catch (error) {
-      if (error.response) {
-        // Server responded with a status other than 200
-        setErrorMessage(error.response.data.message);
-      } else if (error.request) {
-        // Request was made but no response was received
-        setErrorMessage("No response from server. Please try again later.");
-      } else {
-        // Something happened in setting up the request
-        setErrorMessage("An error occurred. Please try again.");
-      }
+    const result = await signUp(username, password, confirmPassword);
+    if (result.success) {
+      navigate('/profile');
     }
-    console.log(username, password, confirmPassword);
   };
+
 
   return (
     <motion.div
