@@ -75,14 +75,14 @@ const Signup = () => {
           {!revealPassword && (
             <IoEyeOutline
               onClick={() => setRevealPassword(!revealPassword)}
-              className="absolute right-6 cursor-pointer top-[56%]"
+              className="absolute right-4 cursor-pointer top-[56%]"
               size={24}
             />
           )}
           {revealPassword && (
             <IoEyeOffOutline
               onClick={() => setRevealPassword(!revealPassword)}
-              className="absolute right-6 cursor-pointer top-[56%]"
+              className="absolute right-4 cursor-pointer top-[56%]"
               size={24}
             />
           )}
@@ -103,14 +103,14 @@ const Signup = () => {
           {!revealConfirmPassword && (
             <IoEyeOutline
               onClick={() => setRevealConfirmPassword(!revealConfirmPassword)}
-              className="absolute right-6 cursor-pointer bottom-[12%]"
+              className="absolute right-4 cursor-pointer bottom-[12%]"
               size={24}
             />
           )}
           {revealConfirmPassword && (
             <IoEyeOffOutline
               onClick={() => setRevealConfirmPassword(!revealConfirmPassword)}
-              className="absolute right-6 cursor-pointer bottom-[12%]"
+              className="absolute right-4 cursor-pointer bottom-[12%]"
               size={24}
             />
           )}

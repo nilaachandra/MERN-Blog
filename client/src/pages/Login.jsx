@@ -70,14 +70,14 @@ const Login = () => {
           {!revealPassword && (
             <IoEyeOutline
               onClick={() => setRevealPassword(!revealPassword)}
-              className="absolute right-6 cursor-pointer top-[58.6%]"
+              className="absolute right-4 cursor-pointer top-[58%]"
               size={24}
             />
           )}
           {revealPassword && (
             <IoEyeOffOutline
               onClick={() => setRevealPassword(!revealPassword)}
-              className="absolute right-6 cursor-pointer top-[58.6%]"
+              className="absolute right-4 cursor-pointer top-[58%]"
               size={24}
             />
           )}
