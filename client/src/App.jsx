@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Blog from "./pages/Blog";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import Create from "./pages/Create";
+
 import { AuthProvider } from "./contexts/AuthContext";
 import Protected from "./components/Protected";
 
@@ -39,6 +41,14 @@ function App() {
             </Protected>
           ),
         },
+        {
+          path: "/create",
+          element: (
+            <Protected>
+              <Create />
+            </Protected>
+          ),
+        }
       ],
     },
   ]);
