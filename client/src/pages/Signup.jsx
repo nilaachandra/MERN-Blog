@@ -9,18 +9,23 @@ import { useAuth } from "../contexts/AuthContext";
 
 
 const Signup = () => {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { light } = useGlobalContext();
   const [revealPassword, setRevealPassword] = useState(false);
   const [revealConfirmPassword, setRevealConfirmPassword] = useState(false);
+
+  const { light } = useGlobalContext();
   const { signUp, errorMessage } = useAuth();
+
   const navigate = useNavigate()
+
   //signup
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const result = await signUp(username, password, confirmPassword);
+    const result = await signUp(firstName, lastName, username, password, confirmPassword);
     if (result.success) {
       navigate('/profile');
     }
@@ -45,6 +50,31 @@ const Signup = () => {
         onSubmit={handleSignUp}
       >
         <h1 className="font-bold text-3xl heading">Create Your Account!</h1>
+        <div className="name grid grid-cols-2 gap-2">
+          <label htmlFor="first name">
+            <p className="font-bold text-lg mb-1">First Name</p>
+              <input type="text" className={`border ${
+              light
+                ? "bg-light-bg border-light-text text-light-text"
+                : "bg-dark-bg text-dark-text"
+            } rounded-sm p-2 w-full`}
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            />
+          </label>
+          <label htmlFor="first name">
+            <p className="font-bold text-lg mb-1">Last Name</p>
+              <input type="text" className={`border ${
+              light
+                ? "bg-light-bg border-light-text text-light-text"
+                : "bg-dark-bg text-dark-text"
+            } rounded-sm p-2 w-full`}
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}/>
+          </label>
+        </div>
         <label htmlFor="username">
           <p className="font-bold text-lg mb-1">Username</p>
           <input
@@ -54,7 +84,7 @@ const Signup = () => {
                 ? "bg-light-bg border-light-text text-light-text"
                 : "bg-dark-bg text-dark-text"
             } rounded-sm p-2 w-full`}
-            placeholder="username"
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -68,7 +98,7 @@ const Signup = () => {
                 ? "bg-light-bg border-light-text text-light-text"
                 : "bg-dark-bg text-dark-text"
             } rounded-sm p-2 w-full`}
-            placeholder="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -96,7 +126,7 @@ const Signup = () => {
                 ? "bg-light-bg border-light-text text-light-text"
                 : "bg-dark-bg text-dark-text"
             } rounded-sm p-2 w-full`}
-            placeholder="confirm password"
+            placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />

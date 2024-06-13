@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import { AuthProvider } from "./contexts/AuthContext";
 import Protected from "./components/Protected";
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -32,19 +33,22 @@ function App() {
         },
         {
           path: "/profile",
-          element: <Protected><Profile /></Protected>
+          element: (
+            <Protected>
+              <Profile />
+            </Protected>
+          ),
         },
       ],
     },
   ]);
+
   return (
-    <>
-      <AuthProvider>
-        <GlobalProvider>
-          <RouterProvider router={router} />
-        </GlobalProvider>
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <GlobalProvider>
+        <RouterProvider router={router} />
+      </GlobalProvider>
+    </AuthProvider>
   );
 }
 

@@ -45,10 +45,10 @@ app.get('/protected', authenticateToken, (req, res) => {
 //signup users
 app.post("/sign-up", async (req, res) => {
   try {
-    const { username, password, confirmPassword } = req.body;
+    const { firstName, lastName, username, password, confirmPassword } = req.body;
 
     // Input validation
-    if (!username || !password || !confirmPassword) {
+    if (!firstName || !lastName || !username || !password || !confirmPassword) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -68,6 +68,8 @@ app.post("/sign-up", async (req, res) => {
 
     // Create new user
     const newUser = await user.create({
+      firstName,
+      lastName,
       username,
       password: hashedPassword,
     });
@@ -78,17 +80,18 @@ app.post("/sign-up", async (req, res) => {
     });
 
     // Respond with the token and user info (excluding password)
-    res.json({ token, username: newUser.username, _id: newUser._id });
+    res.json({ token, firstName: newUser.firstName, lastName: newUser.lastName, username: newUser.username, _id: newUser._id });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 });
 
+
 //login users
+
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-
     // Check if the user exists
     const userDoc = await user.findOne({ username });
     if (!userDoc) {
@@ -104,16 +107,25 @@ app.post("/login", async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { id: userDoc._id, username: userDoc.username },
-      envConfig.jwtToken,
+      process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    // Send response indicating success
-    res.json({ message: "Login successful", token });
+    // Return user info and token
+    res.json({
+      message: "Login successful",
+      user: {
+        firstName: userDoc.firstName,
+        lastName: userDoc.lastName,
+        username: userDoc.username
+      },
+      token
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 });
+
 
 // MongoDB connection
 mongoose
