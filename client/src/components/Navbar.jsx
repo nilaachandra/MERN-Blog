@@ -33,7 +33,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className={`w-full flex justify-between }`} ref={menuRef}>
+    <div className={`w-full flex justify-between  }`} ref={menuRef}>
       <Link
         to="/"
         className={`flex items-center pr-3 rounded-md ${
@@ -58,7 +58,7 @@ const Navbar = () => {
               y: 0,
               transition: { type: "spring", ease: "linear", duration: 0.5 },
             }}
-            className={`w-36 h-24 border absolute flex-col flex top-12 p-4 rounded-sm right-1 ${
+            className={`w-36 h-24 border absolute z-40 flex-col flex top-12 p-4 rounded-sm right-1 ${
               light ? "border-black bg-white" : "border-white bg-black"
             }`}
           >
@@ -75,7 +75,7 @@ const Navbar = () => {
               <Link
                 to="/create"
                 onClick={() => setOpenNav(!openNav)}
-                className="flex items-center  justify-start cursor-pointer hover:underline mt-2 gap-4"
+                className="flex items-center justify-start cursor-pointer hover:underline mt-2 gap-4"
               >
                 <FaRegPenToSquare  size={24} />
                 <span className="text-lg font-bold">Write</span>

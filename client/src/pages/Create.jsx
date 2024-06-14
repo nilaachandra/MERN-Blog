@@ -6,7 +6,14 @@ import Button from "../components/Button";
 import { LuFileEdit } from "react-icons/lu";
 const Create = () => {
   const { light } = useGlobalContext();
-  const [value, setValue] = useState("");
+  const [content, setContent] = useState("");
+  const [title, setTitle ] = useState('');
+  const [category, setCategory] = useState('')
+  const [image, setImage] = useState('')
+  const handleBlogSubmit = (e) => {
+    e.preventDefault()
+    console.log({title: title, category: category, image: image, content: content})
+  }
   const toolbarOptions = [
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     [{ font: [] }],
@@ -24,7 +31,7 @@ const Create = () => {
         Write Your Blog here!
       </h1>
       <form
-        className={`relative gap-3 grid grid-cols-1 w-full border-2 shadow-xl rounded-sm px-3 pt-3 pb-[8.7rem] lg:pb-28 ${
+        className={`relative gap-3 grid grid-cols-1 w-full border-2 shadow-xl rounded-sm px-3 pt-3 pb-[8.7npm run devrem] lg:pb-28 ${
           light ? "border-dark-bg" : "border-x-light-bg"
         }`}
         action=""
@@ -42,6 +49,8 @@ const Create = () => {
                   : "bg-dark-bg text-dark-text"
               } rounded-sm p-2 w-full`}
               placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </label>
           <label htmlFor="first name">
@@ -56,10 +65,14 @@ const Create = () => {
                   : "bg-dark-bg text-dark-text"
               } rounded-sm p-2 w-full`}
               placeholder="Title"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">Tech</option>
-              <option value="">Sports</option>
-              <option value="">General</option>
+              <option value="" disabled>Select a Category</option>
+
+              <option value="Tech">Tech</option>
+              <option value="Sports">Sports</option>
+              <option value="General">General</option>
             </select>
           </label>
         </div>
@@ -74,7 +87,10 @@ const Create = () => {
                 ? "bg-light-bg border-light-text text-light-text"
                 : "bg-dark-bg text-dark-text"
             } rounded-sm p-2 w-full`}
-            placeholder="Title"
+            placeholder=""
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            
           />
         </label>
         <label htmlFor="Content" className="">
@@ -84,12 +100,12 @@ const Create = () => {
           <ReactQuill
             theme="snow"
             className="lg:h-[400px] h-[300px]"
-            value={value}
-            onChange={setValue}
+            value={content}
+            onChange={setContent}
             modules={{ toolbar: toolbarOptions }}
           />
         </label>
-        <Button className='absolute bottom-0 left-3 mb-4 mt-4 flex items-center gap-3'><LuFileEdit size={20}/> Submit Your Blog</Button>
+        <Button onClick={handleBlogSubmit} className='absolute bottom-0 left-3 mb-4 mt-4 flex items-center gap-3'><LuFileEdit size={20}/> Submit Your Blog</Button>
 
       </form>
 
