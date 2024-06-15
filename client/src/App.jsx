@@ -36,16 +36,19 @@ function App() {
         {
           path: "/profile",
           element: (
+            <Protected>
               <Profile />
+            </Protected>
           ),
         },
         {
           path: "/create",
           element: (
-
+            <Protected>
               <Create />
+            </Protected>
           ),
-        }
+        },
       ],
     },
   ]);

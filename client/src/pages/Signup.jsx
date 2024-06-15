@@ -6,6 +6,7 @@ import { useGlobalContext } from "../contexts/GlobalContext";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { useAuth } from "../contexts/AuthContext";
+import { toast } from "sonner";
 
 
 const Signup = () => {
@@ -28,8 +29,11 @@ const Signup = () => {
     const result = await signUp(firstName, lastName, username, password, confirmPassword);
     if (result.success) {
       navigate('/profile');
-    }
+      toast.success('Profile Created Succesfully')
+    } 
+
   };
+
 
 
   return (

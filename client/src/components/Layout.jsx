@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
+import { Toaster } from "sonner";
 
 const Layout = () => {
   const { light, toggleTheme } = useGlobalContext();
@@ -17,6 +18,7 @@ const Layout = () => {
         <Outlet />
       </main>
       <Footer />
+      <Toaster duration={2500} position="top-center"/>
     </div>
   );
 };

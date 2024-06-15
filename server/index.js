@@ -3,8 +3,12 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const user = require("./models/users");
+const Blog = require("./models/blogs"); // Import your blog post model
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const multer = require("multer"); // For handling file uploads
+const path = require("path");
+const fs = require("fs");
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -14,35 +18,49 @@ const PORT = 8080;
 const envConfig = {
   mongoURI: String(process.env.MONGODB_URI),
   jwtToken: String(process.env.JWT_TOKEN),
+  uploadsPath: path.join(__dirname, "uploads"), // Directory for storing uploaded files
 };
-//middlewares
+
+// Middleware setup
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(envConfig.uploadsPath)); // Serve uploaded files statically
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, envConfig.uploadsPath); // Set the destination folder for file uploads
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Generate unique filename
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Middleware to authenticate JWT token
 const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
-  if(!token) return res.sendStatus(401);
+  if (!token) return res.sendStatus(401);
 
   jwt.verify(token, envConfig.jwtToken, (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user
-      next()
-  })
-}
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
 
 
-//server setup
+// Server setup
 app.get("/", (req, res) => {
   res.json("Server is running");
 });
 
-//protected routes
-app.get('/protected', authenticateToken, (req, res) => {
+// Protected route example
+app.get("/protected", authenticateToken, (req, res) => {
   res.json({ message: "This is a protected route", user: req.user });
 });
 
-
-//signup users
+// Signup route
 app.post("/sign-up", async (req, res) => {
   try {
     const { firstName, lastName, username, password, confirmPassword } = req.body;
@@ -86,9 +104,7 @@ app.post("/sign-up", async (req, res) => {
   }
 });
 
-
-//login users
-
+// Login route
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -117,14 +133,45 @@ app.post("/login", async (req, res) => {
       user: {
         firstName: userDoc.firstName,
         lastName: userDoc.lastName,
-        username: userDoc.username
+        username: userDoc.username,
       },
-      token
+      token,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 });
+
+// Create blog post route
+app.post("/create-blog", async (req, res) => {
+  try {
+    const { title, content, username, imageUrl, category } = req.body;
+
+    // Validate input
+    if (!title || !content || !username || !imageUrl || !category) {
+      return res.status(400).json({ message: "Title, content, image URL, username, and category are required" });
+    }
+
+    // Create new blog post
+    const newBlogPost = new Blog({
+      title,
+      content,
+      image: imageUrl, // Save the image URL
+      username, // Assign username to the blog post
+      category, // Save the category
+      createdAt: new Date(),
+    });
+
+    // Save the blog post to the database
+    await newBlogPost.save();
+
+    res.json({ message: "Blog post created successfully", post: newBlogPost });
+  } catch (error) {
+    console.error("Error creating blog post:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
 
 
 // MongoDB connection
@@ -132,11 +179,11 @@ mongoose
   .connect(envConfig.mongoURI)
   .then(() => {
     console.log("Database Connection Successful");
-    // Listener
+    // Start server
     app.listen(PORT, () => {
-      console.log(`App is listening to port: ${PORT}`);
+      console.log(`App is listening on port: ${PORT}`);
     });
   })
   .catch((error) => {
-    console.log(error);
+    console.error("MongoDB connection error:", error);
   });

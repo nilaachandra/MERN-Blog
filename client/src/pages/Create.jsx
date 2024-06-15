@@ -1,102 +1,157 @@
 import React, { useState } from "react";
-import { useGlobalContext } from "../contexts/GlobalContext";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Button from "../components/Button";
 import { LuFileEdit } from "react-icons/lu";
+import axios from "axios";
+import imageCompression from 'browser-image-compression';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase/firebase"; // Adjust the path according to your project structure
+import { useGlobalContext } from "../contexts/GlobalContext";
+import { toast } from "sonner";
+
 const Create = () => {
-  const { light } = useGlobalContext();
   const [content, setContent] = useState("");
-  const [title, setTitle ] = useState('');
-  const [category, setCategory] = useState('')
-  const [image, setImage] = useState('')
-  const handleBlogSubmit = (e) => {
-    e.preventDefault()
-    console.log({title: title, category: category, image: image, content: content})
-  }
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [image, setImage] = useState(null);
+  const [username, setUsername] = useState(
+    JSON.parse(localStorage.getItem("user"))?.username || ""
+  ); // Extract username from local storage
+
+  const {light} = useGlobalContext()
+  const handleBlogSubmit = async (e) => {
+    e.preventDefault();
+    if (!image || !title || !category || !content || !username) {
+      toast.warning("Please Fill Up all the fields.");
+      return;
+    }
+
+    try {
+      // Compress and convert the image to WebP
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+        fileType: 'image/webp'
+      };
+      const compressedImage = await imageCompression(image, options);
+
+      // Set the filename to the title of the blog post
+      const fileName = `${title}.webp`;
+
+      // Create a reference to the Firebase Storage location with the title as filename
+      const storageRef = ref(storage, `images/${fileName}`);
+
+      // Upload the file
+      const snapshot = await uploadBytes(storageRef, compressedImage);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      // Send the blog data including the image URL to the backend
+      const response = await axios.post("http://localhost:8080/create-blog", {
+        title,
+        content,
+        category,
+        username,
+        imageUrl: downloadURL,
+      });
+
+      console.log("Blog post created:", response.data);
+      toast.success('Blog Post Created')
+      // Optionally, redirect or show a success message
+    } catch (error) {
+      console.error("Error creating blog post:", error);
+      toast.error('Error creating Blog')
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+      if (!validTypes.includes(file.type)) {
+        toast.warning('Only JPG, JPEG, PNG, and WEBP formats are allowed.');
+        return;
+      }
+      if (file.size > 15 * 1024 * 1024) { // 15MB size limit
+        toast.warning('File size must be less than 15MB.');
+        return;
+      }
+      setImage(file);
+    }
+  };
+
   const toolbarOptions = [
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     [{ font: [] }],
     [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-    [{ color: [] }], // dropdown with defaults from theme
-
+    [{ color: [] }],
     [{ align: [] }],
-
     ["link"],
     ["code-block"],
   ];
+
   return (
     <div className="w-full min-h-screen flex flex-col">
-      <h1 className="lg:text-2xl text-xl my-2 heading">
-        Write Your Blog here!
-      </h1>
+      <h1 className="lg:text-2xl text-xl my-2 heading">Write Your Blog here!</h1>
       <form
-        className={`relative gap-3 grid grid-cols-1 w-full border-2 shadow-xl rounded-sm px-3 pt-3 pb-[8.7npm run devrem] lg:pb-28 ${
-          light ? "border-dark-bg" : "border-x-light-bg"
-        }`}
-        action=""
+        className="relative gap-3 grid grid-cols-1 w-full border-2 shadow-xl rounded-sm px-3 pt-3 pb-[8.7rem] lg:pb-28"
+        onSubmit={handleBlogSubmit}
+        encType="multipart/form-data"
       >
-        <div className="  grid lg:grid-cols-2 grid-cols-1 gap-3">
-          <label htmlFor="first name">
-            <p className="font-semibold text-lg mb-1">
-              Write a Title for your Blog
-            </p>
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
+          <label htmlFor="title">
+            <p className="font-semibold text-lg mb-1">Write a Title for your Blog</p>
             <input
               type="text"
+              id="title"
               className={`border ${
                 light
-                  ? "bg-light-bg border-light-text text-light-text"
-                  : "bg-dark-bg text-dark-text"
+                  ? 'bg-light-bg border-light-text text-light-text'
+                  : 'bg-dark-bg text-dark-text'
               } rounded-sm p-2 w-full`}
               placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </label>
-          <label htmlFor="first name">
-            <p className="font-semibold text-lg mb-1">
-              Select a Category for your Blog
-            </p>
+          <label htmlFor="category">
+            <p className="font-semibold text-lg mb-1">Select a Category for your Blog</p>
             <select
-              type="text"
+              id="category"
               className={`border ${
                 light
-                  ? "bg-light-bg border-light-text text-light-text"
-                  : "bg-dark-bg text-dark-text"
+                  ? 'bg-light-bg border-light-text text-light-text'
+                  : 'bg-dark-bg text-dark-text'
               } rounded-sm p-2 w-full`}
-              placeholder="Title"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="" disabled>Select a Category</option>
-
+              <option value="" disabled>
+                Select a Category
+              </option>
               <option value="Tech">Tech</option>
               <option value="Sports">Sports</option>
               <option value="General">General</option>
             </select>
           </label>
         </div>
-        <label htmlFor="first name">
-          <p className="font-semibold text-lg mb-1">
-            Select an Image for your Blog
-          </p>
+        <label htmlFor="image">
+          <p className="font-semibold text-lg mb-1">Select an Image for your Blog</p>
           <input
             type="file"
+            id="image"
             className={`border ${
               light
-                ? "bg-light-bg border-light-text text-light-text"
-                : "bg-dark-bg text-dark-text"
+                ? 'bg-light-bg border-light-text text-light-text'
+                : 'bg-dark-bg text-dark-text'
             } rounded-sm p-2 w-full`}
-            placeholder=""
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            
+            accept="image/jpeg, image/png, image/webp, image/jpg" // Accept only specified formats
+            onChange={handleImageChange}
           />
         </label>
-        <label htmlFor="Content" className="">
-          <p className="font-semibold text-lg mb-1">
-            Write a Content for your Blog
-          </p>
+        <label htmlFor="content" className="">
+          <p className="font-semibold text-lg mb-1">Write Content for your Blog</p>
           <ReactQuill
             theme="snow"
             className="lg:h-[400px] h-[300px]"
@@ -105,10 +160,10 @@ const Create = () => {
             modules={{ toolbar: toolbarOptions }}
           />
         </label>
-        <Button onClick={handleBlogSubmit} className='absolute bottom-0 left-3 mb-4 mt-4 flex items-center gap-3'><LuFileEdit size={20}/> Submit Your Blog</Button>
-
+        <Button type="submit" className="absolute bottom-0 left-3 mb-4 mt-4 flex items-center gap-3">
+          <LuFileEdit size={20} /> Submit Your Blog
+        </Button>
       </form>
-
     </div>
   );
 };

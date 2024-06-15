@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useGlobalContext } from '../contexts/GlobalContext';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from 'sonner';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -20,6 +21,7 @@ const Login = () => {
     const result = await login(username, password);
     if (result.success) {
       navigate('/profile');
+      toast.success('Logged In successfully')
     }
   };
 
