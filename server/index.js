@@ -172,6 +172,57 @@ app.post("/create-blog", async (req, res) => {
   }
 });
 
+//get blogs 
+app.get("/all-blogs", async (req, res) => {
+  try {
+    const blogs = await Blog.aggregate([
+      {
+        $lookup: {
+          from: "users", // Collection name to join with
+          localField: "username", // Field from the blogs collection
+          foreignField: "username", // Field from the users collection
+          as: "userDetails", // Output array field
+        },
+      },
+      {
+        $unwind: "$userDetails", // Unwind the userDetails array to a single object
+      },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          image: 1,
+          username: 1,
+          category: 1,
+          createdAt: 1,
+          "userDetails.firstName": 1,
+          "userDetails.lastName": 1,
+        },
+      },
+    ]);
+
+    res.json(blogs);
+  } catch (error) {
+    console.error("Error fetching blogs with user details:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+//delete blogs
+app.delete("/all-blogs/:id", async (request, response) => {
+  try {
+    const { id } = request.params;
+    const result = await Blog.findByIdAndDelete(id);
+
+    if (!result) {
+      return response.status(404).json({ message: "Book Not Found" });
+    }
+    return response.status(200).send({ message: "Book Deleted Succesfully" });
+  } catch (error) {
+    console.log(error.message);
+    response.status(500);
+  }
+});
 
 
 // MongoDB connection

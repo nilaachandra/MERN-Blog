@@ -1,4 +1,6 @@
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
 const GlobalContext = createContext();
 
@@ -25,12 +27,27 @@ export const GlobalProvider = ({ children }) => {
     });
   };
 
+  //get blogs from backend through react query
+const {data: blogs, isLoading, onSuccess, refetch } = useQuery({
+  queryKey : ['data'],
+  queryFn: async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/all-blogs');
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+})
+
   return (
-    <GlobalContext.Provider value={{ light, toggleTheme }}>
+    <GlobalContext.Provider value={{ light, toggleTheme, blogs, isLoading, onSuccess, refetch }}>
       {children}
     </GlobalContext.Provider>
   );
 };
+
+
 
 export const useGlobalContext = () => {
   return useContext(GlobalContext);

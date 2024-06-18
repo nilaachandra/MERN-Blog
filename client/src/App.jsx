@@ -11,6 +11,7 @@ import Create from "./pages/Create";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import Protected from "./components/Protected";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
   const router = createBrowserRouter([
@@ -52,13 +53,15 @@ function App() {
       ],
     },
   ]);
-
+  const queryClient = new QueryClient();
   return (
-    <AuthProvider>
-      <GlobalProvider>
-        <RouterProvider router={router} />
-      </GlobalProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <GlobalProvider>
+          <RouterProvider router={router} />
+        </GlobalProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

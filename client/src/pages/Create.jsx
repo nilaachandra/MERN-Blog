@@ -9,6 +9,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/firebase"; // Adjust the path according to your project structure
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
   const [content, setContent] = useState("");
@@ -18,8 +19,8 @@ const Create = () => {
   const [username, setUsername] = useState(
     JSON.parse(localStorage.getItem("user"))?.username || ""
   ); // Extract username from local storage
-
-  const {light} = useGlobalContext()
+const navigate = useNavigate()
+  const {light,refetch} = useGlobalContext()
   const handleBlogSubmit = async (e) => {
     e.preventDefault();
     if (!image || !title || !category || !content || !username) {
@@ -58,6 +59,8 @@ const Create = () => {
 
       console.log("Blog post created:", response.data);
       toast.success('Blog Post Created')
+      navigate('/profile')
+      refetch()
       // Optionally, redirect or show a success message
     } catch (error) {
       console.error("Error creating blog post:", error);

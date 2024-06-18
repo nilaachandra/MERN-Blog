@@ -38,7 +38,6 @@ const navigate = useNavigate()
   return (
     <motion.div
       ref={ref}
-      onClick={() => navigate('/blogs/:category/:id/:title')}
       initial="hidden"
       animate={controls}
       variants={variants}
