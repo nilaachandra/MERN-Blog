@@ -10,6 +10,7 @@ import { storage } from "../firebase/firebase"; // Adjust the path according to 
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const Create = () => {
   const [content, setContent] = useState("");
@@ -19,7 +20,10 @@ const Create = () => {
   const [username, setUsername] = useState(
     JSON.parse(localStorage.getItem("user"))?.username || ""
   ); // Extract username from local storage
+  const [loading, setLoading] = useState(false)
+
 const navigate = useNavigate()
+
   const {light,refetch} = useGlobalContext()
   const handleBlogSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +31,7 @@ const navigate = useNavigate()
       toast.warning("Please Fill Up all the fields.");
       return;
     }
+    setLoading(true)
 
     try {
       // Compress and convert the image to WebP
@@ -56,15 +61,15 @@ const navigate = useNavigate()
         username,
         imageUrl: downloadURL,
       });
-
+      setLoading(false)
       console.log("Blog post created:", response.data);
       toast.success('Blog Post Created')
-      navigate('/profile')
+      navigate('/')
       refetch()
-      // Optionally, redirect or show a success message
     } catch (error) {
       console.error("Error creating blog post:", error);
       toast.error('Error creating Blog')
+    
     }
   };
 
@@ -164,7 +169,7 @@ const navigate = useNavigate()
           />
         </label>
         <Button type="submit" className="absolute bottom-0 left-3 mb-4 mt-4 flex items-center gap-3">
-          <LuFileEdit size={20} /> Submit Your Blog
+        <LuFileEdit size={20} /> {loading ? <><Loader/><span>Publishing</span></> : <span>Publish</span>}
         </Button>
       </form>
     </div>
